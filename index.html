@@ -1,120 +1,37 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>4to C</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-    }
-    header {
-      padding: 15px;
-      background: #1e293b;
-      text-align: center;
-      font-weight: bold;
-      font-size: 18px;
-    }
-    .container {
-      padding: 15px;
-    }
-    input, button {
-      padding: 10px;
-      margin: 5px 0;
-      width: 100%;
-      border-radius: 8px;
-      border: none;
-    }
-    button {
-      background: #38bdf8;
-      color: black;
-      font-weight: bold;
-    }
-    .task {
-      background: #1e293b;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 10px;
-    }
-  </style>
+  <title>4to C App</title>
 </head>
 <body>
+  <h1>4to C funcionando 🔥</h1>
 
-<header>📚 4to C - Tareas</header>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-<div class="container">
-  <h3>Agregar tarea</h3>
-  <input id="nombre" placeholder="Tu nombre">
-  <input id="curso" placeholder="Curso">
-  <input id="tarea" placeholder="Tarea">
-  <button onclick="agregarTarea()">Agregar</button>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEtYaLmss9BLeOlObTCM-xWZ4KKv908jE",
+      authDomain: "toc-f6683.firebaseapp.com",
+      projectId: "toc-f6683",
+      storageBucket: "toc-f6683.firebasestorage.app",
+      messagingSenderId: "377447851795",
+      appId: "1:377447851795:web:9f2613605d9c50ebdfdce6"
+    };
 
-  <h3>Tareas</h3>
-  <div id="lista"></div>
-</div>
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    // PRUEBA: guardar algo
+    async function test() {
+      await addDoc(collection(db, "test"), {
+        mensaje: "Funciona 🔥",
+        fecha: new Date()
+      });
+      alert("Guardado en Firebase");
+    }
 
-// 🔥 PEGA TU CONFIG REAL AQUÍ
-const firebaseConfig = {
-  apiKey: "AIzaSyDEtYaLmss9BLeOlObTCM-xWZ4KKv908jE",
-  authDomain: "toc-f6683.firebaseapp.com",
-  projectId: "toc-f6683",
-  storageBucket: "toc-f6683.firebasestorage.app",
-  messagingSenderId: "377447851795",
-  appId: "1:377447851795:web:9f2613605d9c50ebdfdce6"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// 🔹 Agregar tarea
-window.agregarTarea = async function() {
-  const nombre = document.getElementById("nombre").value;
-  const curso = document.getElementById("curso").value;
-  const tarea = document.getElementById("tarea").value;
-
-  if (!nombre || !curso || !tarea) {
-    alert("Completa todo");
-    return;
-  }
-
-  await addDoc(collection(db, "tareas"), {
-    nombre,
-    curso,
-    tarea,
-    fecha: new Date().toLocaleDateString()
-  });
-
-  document.getElementById("nombre").value = "";
-  document.getElementById("curso").value = "";
-  document.getElementById("tarea").value = "";
-};
-
-// 🔹 Mostrar tareas en tiempo real
-onSnapshot(collection(db, "tareas"), (snapshot) => {
-  const lista = document.getElementById("lista");
-  lista.innerHTML = "";
-
-  snapshot.forEach(doc => {
-    const data = doc.data();
-
-    lista.innerHTML += `
-      <div class="task">
-        <b>${data.nombre}</b> - ${data.curso}<br>
-        ${data.tarea}<br>
-        <small>${data.fecha}</small>
-      </div>
-    `;
-  });
-});
-</script>
-
+    test();
+  </script>
 </body>
 </html>
